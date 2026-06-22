@@ -410,13 +410,13 @@ function unlockAudio(){
   }
 }
 
-function initAudio(){
+async function initAudio(){
   if(!audioCtx){
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
 
   if(audioCtx.state === "suspended"){
-    audioCtx.resume();
+    await audioCtx.resume();
   }
 
   const osc = audioCtx.createOscillator();
@@ -499,10 +499,14 @@ function startProgress(totalTime){
   },100);
 }
 
-function playBirthday(){
-  initAudio();
-
+async function playBirthday(){
   if(isPlaying) return;
+
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  await audioCtx.resume();
 
   isPlaying = true;
 
