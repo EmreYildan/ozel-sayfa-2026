@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 19 🎼</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  overflow:hidden;
+  font-family:Arial, sans-serif;
+  background:radial-gradient(circle at top,#33215f,#080313 70%);
+  color:white;
+  display:grid;
+  place-items:center;
+}
+
+.note,.cursor-note{
+  position:fixed;
+  pointer-events:none;
+  z-index:10;
+}
+
+.note{
+  top:-40px;
+  font-size:28px;
+  opacity:.8;
+  animation:fall linear forwards;
+}
+
+.cursor-note{
+  font-size:22px;
+  animation:fadeNote 1s ease forwards;
+}
+
+@keyframes fall{
+  to{transform:translateY(115vh) rotate(360deg);opacity:0}
+}
+
+@keyframes fadeNote{
+  to{transform:translateY(-45px) rotate(35deg);opacity:0}
+}
+
+.card{
+  width:min(92%,460px);
+  padding:28px;
+  border-radius:30px;
+  background:rgba(255,255,255,.13);
+  backdrop-filter:blur(18px);
+  box-shadow:0 30px 90px #0009;
+  text-align:center;
+  position:relative;
+  z-index:2;
+  animation:show .9s ease forwards;
+}
+
+@keyframes show{
+  from{opacity:0;transform:scale(.8) translateY(30px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+
+.spotify{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  text-align:left;
+}
+
+.cover{
+  overflow:hidden;
+  width:170px;
+  height:auto;
+}
+
+
+.cover.playing{
+  animation:spin 8s linear infinite;
+  border-radius:50%;
+}
+
+.cover img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.small{
+  color:#b7ffcf;
+  letter-spacing:2px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+h1{
+  margin:8px 0 6px;
+  font-size:30px;
+}
+
+.info{
+  color:#ddd;
+  line-height:1.5;
+  font-size:15px;
+}
+
+.equalizer{
+  display:flex;
+  gap:4px;
+  height:24px;
+  align-items:end;
+  margin-top:10px;
+}
+
+.equalizer span{
+  width:5px;
+  height:8px;
+  background:#1db954;
+  border-radius:10px;
+}
+
+.equalizer.playing span{
+  animation:eq .7s infinite ease-in-out alternate;
+}
+
+.equalizer span:nth-child(2){animation-delay:.15s}
+.equalizer span:nth-child(3){animation-delay:.3s}
+.equalizer span:nth-child(4){animation-delay:.45s}
+
+@keyframes eq{
+  to{height:24px}
+}
+
+.bar{
+  height:8px;
+  background:#ffffff33;
+  border-radius:20px;
+  overflow:hidden;
+  margin:22px 0 8px;
+}
+
+.progress{
+  width:0%;
+  height:100%;
+  background:#1db954;
+  border-radius:20px;
+}
+
+.time{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:#ccc;
+}
+
+.piano{
+  height:150px;
+  margin:25px auto 18px;
+  display:flex;
+  justify-content:center;
+  position:relative;
+}
+
+.key{
+  border:none;
+  cursor:pointer;
+  font-weight:bold;
+  transition:.1s;
+}
+
+.white{
+  width:48px;
+  height:145px;
+  background:white;
+  color:#222;
+  border-radius:0 0 10px 10px;
+  border:1px solid #ccc;
+  padding-top:105px;
+}
+
+.white:active{transform:translateY(5px);background:#ffe8f1}
+
+.black{
+  position:absolute;
+  width:31px;
+  height:90px;
+  background:#111;
+  color:white;
+  border-radius:0 0 8px 8px;
+  z-index:3;
+  padding-top:55px;
+}
+
+.black:active{transform:translateY(5px);background:#333}
+
+.cs{left:84px}
+.ds{left:132px}
+.fs{left:228px}
+.gs{left:276px}
+.as{left:324px}
+
+button.main{
+  border:0;
+  padding:14px 24px;
+  border-radius:999px;
+  background:#1db954;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 12px 30px #0006;
+}
+
+button.main:hover:not(:disabled){transform:scale(1.04)}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.final-scene{
+  opacity:0;
+  max-height:0;
+  overflow:hidden;
+  transition:1s ease;
+}
+
+.final-scene.show{
+  opacity:1;
+  max-height:520px;
+  margin-top:22px;
+}
+
+.cake{
+  font-size:90px;
+  animation:bounce 1.5s infinite;
+}
+
+.message{
+  font-size:19px;
+  line-height:1.5;
+}
+
+@keyframes bounce{
+  50%{transform:translateY(-10px)}
+}
+#lockScreen{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at top,#33215f,#080313 70%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.lockBox{
+  width:min(90%,340px);
+  padding:32px;
+  text-align:center;
+  border-radius:28px;
+  background:rgba(255,255,255,.14);
+  backdrop-filter:blur(16px);
+  box-shadow:0 25px 70px #0009;
+}
+
+.lockBox h2{
+  margin-top:0;
+}
+
+.lockBox input{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  margin:16px 0;
+  outline:none;
+  text-align:center;
+  font-size:16px;
+}
+
+.lockBox button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:#1db954;
+  color:white;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+}
+
+#error{
+  color:#ff8b8b;
+  min-height:22px;
+}
+
+</style>
+</head>
+
+<body>
+
+  <div id="lockScreen">
+  <div class="lockBox">
+    <h2>🎼 Özel Bir Sürpriz</h2>
+    <p>Bu sayfa sadece Özlen için hazırlandı.</p>
+
+    <input type="password" id="password" placeholder="Şifreyi gir...">
+
+    <button onclick="checkPassword()">Aç 🎁</button>
+
+    <p id="error"></p>
+  </div>
+</div>
+
+<div class="card">
+
+  <div class="spotify">
+    <div class="cover" id="cover">
+    <img src="foto.jpg" alt="">
+    </div>
+
+    <div>
+      <div class="small">NOW PLAYING</div>
+      <h1>Chapter 19</h1>
+      <div class="info">
+        Track: Happy Birthday Symphony<br>
+        Artist: Özlen Şen<br>
+        Album: 19th Birthday Era
+      </div>
+
+      <div class="equalizer" id="eq">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="progress" id="progress"></div>
+  </div>
+
+  <div class="time">
+    <span id="currentTime">0:00</span>
+    <span>0:12</span>
+  </div>
+
+  <div class="piano">
+    <button class="key white" onclick="playNote(261)">C</button>
+    <button class="key white" onclick="playNote(293)">D</button>
+    <button class="key white" onclick="playNote(329)">E</button>
+    <button class="key white" onclick="playNote(349)">F</button>
+    <button class="key white" onclick="playNote(392)">G</button>
+    <button class="key white" onclick="playNote(440)">A</button>
+    <button class="key white" onclick="playNote(493)">B</button>
+    <button class="key white" onclick="playNote(523)">C</button>
+
+    <button class="key black cs" onclick="playNote(277)">#</button>
+    <button class="key black ds" onclick="playNote(311)">#</button>
+    <button class="key black fs" onclick="playNote(370)">#</button>
+    <button class="key black gs" onclick="playNote(415)">#</button>
+    <button class="key black as" onclick="playNote(466)">#</button>
+  </div>
+
+<button class="main" onclick="playBirthday()">Melodiyi Çal 🎹</button>
+
+  <div id="finalScene" class="final-scene">
+    <div class="cake">🎂</div>
+    <div class="message">
+    <b>İyi ki doğdun Özlennn 🎉</b><br><br>
+
+    Hayatının yeni yaşında her şey dilediğince olsun.  
+    19. yaşın sana sağlık, mutluluk, başarı ve unutulmaz anılar getirsin.  
+    Umarım kurduğun bütün hayaller birer birer gerçek olur.Nice Mutlu Senelere 🎂<br><br>
+
+
+    Müzik yolculuğunda da her zaman en güzel melodiler seninle olsun.  
+    Geleceğin harika müzik öğretmeni olarak nice güzel başarılara imza atacağına inanıyorummm. 🎶✨
+    </div>
+  </div>
+
+</div>
+
+<script>
+let audioCtx;
+
+function checkPassword(){
+  const password = document.getElementById("password").value;
+
+  if(password === "ozlen19"){
+    document.getElementById("lockScreen").style.display = "none";
+  }else{
+    document.getElementById("error").textContent = "Şifre yanlış 🎹";
+  }
+}
+let isPlaying = false;
+let progressTimer;
+
+function unlockAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if(audioCtx.state === "suspended"){
+    audioCtx.resume();
+  }
+}
+
+function initAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if(audioCtx.state === "suspended"){
+    audioCtx.resume();
+  }
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  gain.gain.value = 0.001;
+  osc.frequency.value = 440;
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.05);
+}
+
+function playNote(freq, duration = 0.35){
+  if(!audioCtx) initAudio();
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = "triangle";
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start(audioCtx.currentTime);
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function rainNotes(){
+  const symbols = ["♪","♫","♬","♩","♭","♯","🎵","🎶"];
+
+  for(let i=0;i<45;i++){
+    const n = document.createElement("div");
+    n.className = "note";
+    n.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    n.style.left = Math.random()*100 + "vw";
+    n.style.animationDuration = 2 + Math.random()*3 + "s";
+    n.style.fontSize = 18 + Math.random()*28 + "px";
+    document.body.appendChild(n);
+    setTimeout(()=>n.remove(),5000);
+  }
+}
+
+document.addEventListener("mousemove", e=>{
+  const symbols = ["♪","♫","♬","🎵","🎶"];
+  const n = document.createElement("div");
+  n.className = "cursor-note";
+  n.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+  n.style.left = e.clientX + "px";
+  n.style.top = e.clientY + "px";
+  document.body.appendChild(n);
+  setTimeout(()=>n.remove(),1000);
+});
+
+function startProgress(totalTime){
+  const progress = document.getElementById("progress");
+  const currentTime = document.getElementById("currentTime");
+  const start = Date.now();
+
+  clearInterval(progressTimer);
+
+  progressTimer = setInterval(()=>{
+    const elapsed = Date.now() - start;
+    const percent = Math.min((elapsed / totalTime) * 100, 100);
+
+    progress.style.width = percent + "%";
+
+    const sec = Math.floor(elapsed / 1000);
+    currentTime.textContent = "0:" + String(sec).padStart(2,"0");
+
+    if(percent >= 100){
+      clearInterval(progressTimer);
+    }
+  },100);
+}
+
+function playBirthday(){
+  initAudio();
+
+  if(isPlaying) return;
+
+  isPlaying = true;
+
+  const btn = document.querySelector(".main");
+  const cover = document.getElementById("cover");
+  const eq = document.getElementById("eq");
+
+  btn.disabled = true;
+  btn.textContent = "Konser Devam Ediyor 🎼";
+  cover.classList.add("playing");
+  eq.classList.add("playing");
+
+  const melody = [
+    [392,300],[392,300],[440,600],[392,600],[523,600],[493,900],
+    [392,300],[392,300],[440,600],[392,600],[587,600],[523,900],
+    [392,300],[392,300],[784,600],[659,600],[523,600],[493,600],[440,900],
+    [698,300],[698,300],[659,600],[523,600],[587,600],[523,1000]
+  ];
+
+  let delay = 0;
+
+  melody.forEach(([freq,time])=>{
+    setTimeout(()=>playNote(freq,time/1000), delay);
+    delay += time;
+  });
+
+  startProgress(delay);
+
+  setTimeout(()=>{
+    document.getElementById("finalScene").classList.add("show");
+    rainNotes();
+
+    btn.disabled = false;
+    btn.textContent = "Melodiyi Çal 🎹";
+    cover.classList.remove("playing");
+    eq.classList.remove("playing");
+    isPlaying = false;
+  }, delay + 300);
+}
+
+setInterval(rainNotes, 4500);
+rainNotes();
+</script>
+
+</body>
+</html>
